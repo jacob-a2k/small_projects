@@ -2,26 +2,28 @@
 
 using namespace std;
 
-char *palindrome(char *text){
+void palindrome(const char * const input, char *const output){
     int i = 0;
-    char *word = new char[100];
-    while(text[i] != '\0'){
+    while(input[i] != '\0'){
         i++;
     }
     int k = i;
     for(int j = 0; j < i; j++){
-        word[j] = text[k-1];
+        output[j] = input[k-1];
         k--;
     }
-    return word;
 }
 
 int main()
 {
     char *text = new char[100];
+    char *word = new char[100];
     cin >> text;
-    text = palindrome(text);
-    cout << text;
+    palindrome(text,word);
+    cout << word;
+
+    delete [] text;
+    delete [] word;
 
     return 0;
 }
