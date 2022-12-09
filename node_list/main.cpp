@@ -12,6 +12,7 @@ int main()
     Node *first = nullptr;
     Node *ptr = nullptr;
     Node one,two,three,four,fifth,six;
+
     first = &one;
     ptr = first;
     ptr->value = 1;
@@ -41,6 +42,15 @@ int main()
     ptr = &six;
     ptr->value = 6;
     ptr->next = nullptr;
+
+    cout << first->value << endl;
+    cout << first->next->value << endl;
+    cout << first->next->next->value << endl;
+    cout << first->next->next->next->value << endl;
+    cout << first->next->next->next->next->value << endl;
+    cout << first->next->next->next->next->next->value << endl;
+    cout << first->next->next->next->next->next->next << endl;
+
 
     return 0;
 }
