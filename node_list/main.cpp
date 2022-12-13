@@ -1,4 +1,3 @@
-
 #include <iostream>
 
 using namespace std;
@@ -11,39 +10,45 @@ struct List{
     Node* first;
 };
 void display(List first_pointer);
+void add_front(List* list, Node *new_node);
 
 int main()
 {
     Node one;
     List first_pointer;
     first_pointer.first = &one;
-
     Node* ptr = &one;
-    ptr->value = 1;
-    ptr->next = nullptr;
-    //display(first_pointer);
+    one.value = NULL;
+    one.next = nullptr;
 
-    Node two;
-    ptr->next = &two;
-    ptr = &two;
-    ptr->value = 2;
-    ptr->next = nullptr;
-    //display(first_pointer);cout << endl;
-
-    Node three;
-    ptr->next = &three;
-    ptr = &three;
-    ptr->value = 3;
-    ptr->next = nullptr;
-    display(first_pointer);
-
-
+    for(;;){
+        int number;
+        cin >> number;
+        switch(number){
+        case 1:{
+            Node* new_node = new Node;
+            add_front(&first_pointer,new_node);
+        }
+            break;
+        case 2:
+            display(first_pointer);
+            break;
+        case 3:
+            exit(0);
+        }
+    }
     return 0;
 }
 void display(List first_pointer){
-    List temp = first_pointer;
-    while(temp.first != 0){
-        cout << temp.first->value << endl;
-        temp.first = temp.first->next;
+    Node* current = first_pointer.first;
+    while(current != nullptr){
+        cout << current->value << endl;
+        current = current->next;
     }
+}
+void add_front(List* list, Node* new_node){
+    cout << "Podaj nowa wartosc: ";
+    cin >> new_node->value;
+    new_node->next = list->first;
+    list->first = new_node;
 }
