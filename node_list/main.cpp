@@ -18,7 +18,8 @@ int main()
     List first_pointer;
     first_pointer.first = &one;
     Node* ptr = &one;
-    one.value = NULL;
+    cout << "Podaj pierwsze dane: ";
+    cin >> one.value;
     one.next = nullptr;
 
     for(;;){
@@ -41,6 +42,7 @@ int main()
 }
 void display(List first_pointer){
     Node* current = first_pointer.first;
+    cout << endl;
     while(current != nullptr){
         cout << current->value << endl;
         current = current->next;
