@@ -19,13 +19,8 @@ Node* remove_front(List* list);
 
 int main()
 {
-	//po co pierwszy węzeł strat powninie być list_ptr.first = nullptr
-    Node one;
     List list_ptr;
-    list_ptr.first = &one;
-    cout << "Podaj wartosc wezla pierwszego: ";
-    one.value = put_value();
-    one.next = nullptr;
+    list_ptr.first = nullptr;
 
     list_methods(&list_ptr);
 
@@ -44,10 +39,14 @@ void list_methods(List* const list_ptr){
             add_front(list_ptr,new_node);
         }
             break;
-        case 2:
-		//Po co ten cout i tak usuwasz pierwszy
-            cout << "Podaj wartosc usuwanego elementu: ";
+        case 2:{
+            // dodałem warunek, gdyby uzytkownik chciał usunać element a lista była pusta
+            if(list_ptr->first == nullptr){
+                cout << "Lista jest pusta!Dodaj nowy element!" << endl;
+            }
+            else
             delete remove_front(list_ptr);
+        }
             break;
         case 3:
             display(list_ptr);
