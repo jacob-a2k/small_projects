@@ -14,6 +14,7 @@ void add_front(List* list, Node *new_node);
 void list_methods(List* const list_ptr);
 int put_value();
 void menu();
+Node* remove_front(List* list);
 
 int main()
 {
@@ -42,9 +43,13 @@ void list_methods(List* const list_ptr){
         }
             break;
         case 2:
-            display(list_ptr);
+            cout << "Podaj wartosc usuwanego elementu: ";
+            delete remove_front(list_ptr);
             break;
         case 3:
+            display(list_ptr);
+            break;
+        case 4:
             exit(0);
         }
     }
@@ -53,8 +58,9 @@ void menu(){
     cout << "\n----------------LISTA----------------" << endl;
     cout << "Wybiez jedna z dostepnych opcji" << endl << endl;
     cout << "1. Add_front" << endl;
-    cout << "2. Display" << endl;
-    cout << "3. Exit" << endl;
+    cout << "2. Remove_front" << endl;
+    cout << "3. Display" << endl;
+    cout << "4. Exit" << endl;
     cout << endl;
 }
 void display(const List * const list_ptr){
@@ -73,4 +79,9 @@ int put_value(){
     int value;
     cin >> value;
     return value;
+}
+Node* remove_front(List* list){
+    Node* tmp = list->first;
+    list->first = list->first->next;
+    return tmp;
 }
