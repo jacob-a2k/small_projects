@@ -40,6 +40,7 @@ void list_methods(List* const list_ptr){
         }
             break;
         case 2:{
+			//dodaj funkcje is_empty
             // dodałem warunek, gdyby uzytkownik chciał usunać element a lista była pusta
             if(list_ptr->first == nullptr){
                 cout << "Lista jest pusta!Dodaj nowy element!" << endl;
