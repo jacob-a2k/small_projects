@@ -16,6 +16,7 @@ void list_methods(List* const list_ptr);
 int put_value();
 void menu();
 Node* remove_front(List* list);
+bool is_node_empty(const List* const list_ptr);
 
 int main()
 {
@@ -40,13 +41,8 @@ void list_methods(List* const list_ptr){
         }
             break;
         case 2:{
-			//dodaj funkcje is_empty
-            // dodałem warunek, gdyby uzytkownik chciał usunać element a lista była pusta
-            if(list_ptr->first == nullptr){
-                cout << "Lista jest pusta!Dodaj nowy element!" << endl;
-            }
-            else
-            delete remove_front(list_ptr);
+            if(!is_node_empty(list_ptr))
+                delete remove_front(list_ptr);
         }
             break;
         case 3:
@@ -77,6 +73,13 @@ void display(const List * const list_ptr){
 void add_front(List* list, Node* new_node){
     new_node->next = list->first;
     list->first = new_node;
+}
+bool is_node_empty(const List* const list_ptr){
+    if(list_ptr->first == nullptr){
+        cout << "Lista jest pusta!Dodaj nowy element!" << endl;
+        return true;
+    }
+    else return false;
 }
 int put_value(){
     int value;
