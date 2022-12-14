@@ -19,6 +19,7 @@ Node* remove_front(List* list);
 
 int main()
 {
+	//po co pierwszy węzeł strat powninie być list_ptr.first = nullptr
     Node one;
     List list_ptr;
     list_ptr.first = &one;
@@ -44,6 +45,7 @@ void list_methods(List* const list_ptr){
         }
             break;
         case 2:
+		//Po co ten cout i tak usuwasz pierwszy
             cout << "Podaj wartosc usuwanego elementu: ";
             delete remove_front(list_ptr);
             break;
