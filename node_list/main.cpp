@@ -12,14 +12,16 @@ struct List{
 void display(const List* const list_ptr);
 void add_front(List* list, Node *new_node);
 void list_methods(List* const list_ptr);
+int put_value();
+void menu();
 
 int main()
 {
     Node one;
     List list_ptr;
     list_ptr.first = &one;
-    cout << "Podaj pierwsze dane: ";
-    cin >> one.value;
+    cout << "Podaj wartosc wezla pierwszego: ";
+    one.value = put_value();
     one.next = nullptr;
 
     list_methods(&list_ptr);
@@ -28,13 +30,14 @@ int main()
 }
 void list_methods(List* const list_ptr){
     for(;;){
-        int number;
-        cin >> number;
+        menu();
+        cout << "Wybierz dostepna opcje z menu Listy!" << endl;
+        int number = put_value();
         switch(number){
         case 1:{
             Node* new_node = new Node;
             cout << "Podaj nowa wartosc: ";
-            cin >> new_node->value;
+            new_node->value = put_value();
             add_front(list_ptr,new_node);
         }
             break;
@@ -46,7 +49,14 @@ void list_methods(List* const list_ptr){
         }
     }
 }
-
+void menu(){
+    cout << "\n----------------LISTA----------------" << endl;
+    cout << "Wybiez jedna z dostepnych opcji" << endl << endl;
+    cout << "1. Add_front" << endl;
+    cout << "2. Display" << endl;
+    cout << "3. Exit" << endl;
+    cout << endl;
+}
 void display(const List * const list_ptr){
     Node* current = list_ptr->first;
     cout << endl;
@@ -58,4 +68,9 @@ void display(const List * const list_ptr){
 void add_front(List* list, Node* new_node){
     new_node->next = list->first;
     list->first = new_node;
+}
+int put_value(){
+    int value;
+    cin >> value;
+    return value;
 }
