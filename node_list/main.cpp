@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
@@ -78,6 +79,13 @@ void add_front(List* list, Node* new_node){
 int put_value(){
     int value;
     cin >> value;
+    while(!cin.good()){
+        cout << "Blad!Sprobuj ponownie! "<< endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Wprowadz ponownie!" << endl;
+        cin >> value;
+    }
     return value;
 }
 Node* remove_front(List* list){
