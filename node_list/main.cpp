@@ -9,7 +9,7 @@ struct Node{
 struct List{
     Node* first;
 };
-void display(List list_ptr);
+void display(const List* const list_ptr);
 void add_front(List* list, Node *new_node);
 
 int main()
@@ -34,7 +34,7 @@ int main()
         }
             break;
         case 2:
-            display(list_ptr);
+            display(&list_ptr);
             break;
         case 3:
             exit(0);
@@ -42,8 +42,8 @@ int main()
     }
     return 0;
 }
-void display(List list_ptr){
-    Node* current = list_ptr.first;
+void display(const List * const list_ptr){
+    Node* current = list_ptr->first;
     cout << endl;
     while(current != nullptr){
         cout << current->value << endl;
