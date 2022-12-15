@@ -95,10 +95,9 @@ void add_back(List* list, Node* new_node){
         while(tmp != nullptr){
             tmp = tmp->next;
         }
-        list->last = tmp;
-        list->last = new_node;
         new_node->next = nullptr;
-
+        tmp = new_node;
+        list->last = tmp;
     }
     else{
         Node* tmp = list->last;
