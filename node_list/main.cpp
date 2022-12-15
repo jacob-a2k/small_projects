@@ -92,10 +92,14 @@ void add_front(List* list, Node* new_node){
     list->first = new_node;
 }
 void add_back(List* list, Node* new_node){
-    if(list->last == nullptr)
-       list->first = new_node;
     Node* tmp = list->last;
-    tmp->next = new_node;
+    if(list->last == nullptr && list->first == nullptr){
+       list->first = new_node;
+        tmp = new_node;
+    }
+    else{
+        tmp->next = new_node;
+    }
     list->last = new_node;
     new_node->next = nullptr;
 }
