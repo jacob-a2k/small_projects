@@ -9,6 +9,7 @@ struct Node{
 };
 struct List{
     Node* first;
+    Node* last;
 };
 void display(const List* const list_ptr);
 void add_front(List* list, Node *new_node);
@@ -17,11 +18,13 @@ int put_value();
 void menu();
 Node* remove_front(List* list);
 bool is_list_empty(const List* const list_ptr);
+void add_back(List* list, Node* new_node);
 
 int main()
 {
     List list_ptr;
-    list_ptr.first = nullptr;
+    list_ptr.last = nullptr;
+    list_ptr.first = list_ptr.last;
 
     list_methods(&list_ptr);
 
@@ -45,10 +48,20 @@ void list_methods(List* const list_ptr){
                 delete remove_front(list_ptr);
         }
             break;
-        case 3:
-            display(list_ptr);
+        case 3:{
+            Node* new_node = new Node;
+            cout << "Podaj nowa wartosc: ";
+            new_node->value = put_value();
+            add_back(list_ptr,new_node);
+        }
             break;
         case 4:
+
+            break;
+        case 5:
+            display(list_ptr);
+            break;
+        case 6:
             exit(0);
         }
     }
@@ -58,8 +71,10 @@ void menu(){
     cout << "Wybiez jedna z dostepnych opcji" << endl << endl;
     cout << "1. Add_front" << endl;
     cout << "2. Remove_front" << endl;
-    cout << "3. Display" << endl;
-    cout << "4. Exit" << endl;
+    cout << "3. Add_back" << endl;
+    cout << "4. Remove_back" << endl;
+    cout << "5. Display" << endl;
+    cout << "6. Exit" << endl;
     cout << endl;
 }
 void display(const List * const list_ptr){
@@ -73,6 +88,25 @@ void display(const List * const list_ptr){
 void add_front(List* list, Node* new_node){
     new_node->next = list->first;
     list->first = new_node;
+}
+void add_back(List* list, Node* new_node){
+    if(list->last == nullptr){
+        Node* tmp = list->first;
+        while(tmp != nullptr){
+            tmp = tmp->next;
+        }
+        list->last = tmp;
+        list->last = new_node;
+        new_node->next = nullptr;
+
+    }
+    else{
+        Node* tmp = list->last;
+        list->last = new_node;
+        tmp->next = new_node;
+        new_node->next = nullptr;
+
+    }
 }
 bool is_list_empty(const List* const list_ptr){
     if(list_ptr->first == nullptr){
