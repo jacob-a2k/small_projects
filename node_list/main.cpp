@@ -86,26 +86,18 @@ void display(const List * const list_ptr){
     }
 }
 void add_front(List* list, Node* new_node){
+    if(list->first == nullptr)
+        list->last = new_node;
     new_node->next = list->first;
     list->first = new_node;
 }
 void add_back(List* list, Node* new_node){
-    if(list->last == nullptr){
-        Node* tmp = list->first;
-        while(tmp != nullptr){
-            tmp = tmp->next;
-        }
-        new_node->next = nullptr;
-        tmp = new_node;
-        list->last = tmp;
-    }
-    else{
-        Node* tmp = list->last;
-        list->last = new_node;
-        tmp->next = new_node;
-        new_node->next = nullptr;
-
-    }
+    if(list->last == nullptr)
+       list->first = new_node;
+    Node* tmp = list->last;
+    tmp->next = new_node;
+    list->last = new_node;
+    new_node->next = nullptr;
 }
 bool is_list_empty(const List* const list_ptr){
     if(list_ptr->first == nullptr){
