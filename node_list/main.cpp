@@ -19,6 +19,7 @@ void menu();
 Node* remove_front(List* list);
 bool is_list_empty(const List* const list_ptr);
 void add_back(List* list, Node* new_node);
+Node* remove_back(List* list);
 
 int main()
 {
@@ -56,7 +57,8 @@ void list_methods(List* const list_ptr){
         }
             break;
         case 4:
-
+            if(!is_list_empty(list_ptr))
+                delete remove_back(list_ptr);
             break;
         case 5:
             display(list_ptr);
@@ -125,5 +127,17 @@ int put_value(){
 Node* remove_front(List* list){
     Node* tmp = list->first;
     list->first = list->first->next;
+    return tmp;
+}
+Node* remove_back(List* list){
+    Node* tmp = list->first;
+    Node* penultimate = nullptr;
+    while(tmp->next != nullptr){
+        penultimate = tmp;
+        tmp = tmp->next;
+    }
+    list->last = penultimate;
+    list->last->next = nullptr;
+
     return tmp;
 }
