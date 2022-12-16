@@ -136,8 +136,13 @@ Node* remove_back(List* list){
         penultimate = tmp;
         tmp = tmp->next;
     }
-    list->last = penultimate;
-    list->last->next = nullptr;
-
+    if(penultimate == nullptr){
+        list->last = nullptr;
+        list->first = nullptr;
+    }
+    else{
+        list->last = penultimate;
+        list->last->next = nullptr;
+    }
     return tmp;
 }
