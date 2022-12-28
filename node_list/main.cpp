@@ -20,6 +20,7 @@ Node* remove_front(List* list);
 bool is_list_empty(const List* const list_ptr);
 void add_back(List* list, Node* new_node);
 Node* remove_back(List* list);
+void add_to_choosen_position(List* list, Node* new_node, int position);
 
 int main()
 {
@@ -65,6 +66,12 @@ void list_methods(List* const list_ptr){
             break;
         case 6:
             exit(0);
+        case 7:
+            Node* new_node = new Node;
+            cout << "Podaj nowa warosc, a nastepnie na ktorym miejscu od gory ma sie znajdowac: ";
+            new_node->value = put_value();
+            int position = put_value();
+            add_to_choosen_position(list_ptr,new_node,position);
         }
     }
 }
@@ -77,6 +84,7 @@ void menu(){
     cout << "4. Remove_back" << endl;
     cout << "5. Display" << endl;
     cout << "6. Exit" << endl;
+    cout << "7. Add_in_choosen_location" << endl;
     cout << endl;
 }
 void display(const List * const list_ptr){
@@ -145,4 +153,23 @@ Node* remove_back(List* list){
         list->last->next = nullptr;
     }
     return tmp;
+}
+void add_to_choosen_position(List* list, Node* new_node, int position){
+    if(position == 1){
+        Node* tmp = list->first;
+        list->first = new_node;
+        new_node->next = tmp;
+    }
+    else{
+        Node* current = list->first;
+        for(int i = 2; i < position; i++){
+            current = current->next;
+        }
+        Node* tmp = current->next;
+        current->next = new_node;
+        if(tmp == nullptr)
+            new_node->next = nullptr;
+        else
+            new_node->next = tmp;
+    }
 }
