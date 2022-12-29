@@ -72,14 +72,14 @@ void list_methods(List* const list_ptr){
             cout << "Podaj nowa warosc, a nastepnie na ktorym miejscu od gory ma sie znajdowac: ";
             new_node->value = put_value();
             int position = put_value();
-            add_to_choosen_position(list_ptr,new_node,position);
+            add_to_choosen_position(list_ptr,new_node,position-1);
         }
             break;
         case 8:
             if(!is_list_empty(list_ptr)){
                 cout << "Podaj ktory element od gory, ma  zostac usuniety: " << endl;
                 int position = put_value();
-                delete remove_from_choosen_position(list_ptr, position);
+                delete remove_from_choosen_position(list_ptr,position-1);
             }
             break;
         }
@@ -107,9 +107,9 @@ void display(const List * const list_ptr){
     }
 }
 void add_front(List* list, Node* new_node){
-	//dawaj klamerki
-    if(list->first == nullptr)
+    if(list->first == nullptr){
         list->last = new_node;
+    }
     new_node->next = list->first;
     list->first = new_node;
 }
@@ -130,8 +130,7 @@ bool is_list_empty(const List* const list_ptr){
         cout << "Lista jest pusta!Dodaj nowy element!" << endl;
         return true;
     }
-	//niepotrzebny else wystarczy return
-    else return false;
+    return false;
 }
 int put_value(){
     int value;
@@ -146,9 +145,11 @@ int put_value(){
     return value;
 }
 Node* remove_front(List* list){
-	//co sie dzieje z last?
     Node* tmp = list->first;
     list->first = list->first->next;
+    if(list->first == nullptr){
+        list->last = nullptr;
+    }
     return tmp;
 }
 Node* remove_back(List* list){
@@ -169,29 +170,29 @@ Node* remove_back(List* list){
     return tmp;
 }
 void add_to_choosen_position(List* list, Node* new_node, int position){
-	//pozycje licz od zera
-    if(position == 1){
+    if(position == 0){
         Node* tmp = list->first;
         list->first = new_node;
         new_node->next = tmp;
     }
     else{
         Node* current = list->first;
-        for(int i = 2; i < position; i++){
+        for(int i = 1; i < position; i++){
             current = current->next;
         }
         Node* tmp = current->next;
         current->next = new_node;
-		//klamerki
-        if(tmp == nullptr)
+
+        if(tmp == nullptr){
             new_node->next = nullptr;
-        else
+        }
+        else{
             new_node->next = tmp;
+        }
     }
 }
 Node* remove_from_choosen_position(List* list, int position){
-	//pozycje licz od zera
-    if(position == 1){
+    if(position == 0){
         Node* tmp = list->first;
         list->first = tmp->next;
         return tmp;
@@ -199,7 +200,7 @@ Node* remove_from_choosen_position(List* list, int position){
     else{
         Node* current = list->first;
         Node* previous = nullptr;
-        for(int i = 1; i < position; i++){
+        for(int i = 0; i < position; i++){
             previous = current;
             current = current->next;
         }
