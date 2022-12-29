@@ -107,6 +107,7 @@ void display(const List * const list_ptr){
     }
 }
 void add_front(List* list, Node* new_node){
+	//dawaj klamerki
     if(list->first == nullptr)
         list->last = new_node;
     new_node->next = list->first;
@@ -129,6 +130,7 @@ bool is_list_empty(const List* const list_ptr){
         cout << "Lista jest pusta!Dodaj nowy element!" << endl;
         return true;
     }
+	//niepotrzebny else wystarczy return
     else return false;
 }
 int put_value(){
@@ -144,6 +146,7 @@ int put_value(){
     return value;
 }
 Node* remove_front(List* list){
+	//co sie dzieje z last?
     Node* tmp = list->first;
     list->first = list->first->next;
     return tmp;
@@ -166,6 +169,7 @@ Node* remove_back(List* list){
     return tmp;
 }
 void add_to_choosen_position(List* list, Node* new_node, int position){
+	//pozycje licz od zera
     if(position == 1){
         Node* tmp = list->first;
         list->first = new_node;
@@ -178,6 +182,7 @@ void add_to_choosen_position(List* list, Node* new_node, int position){
         }
         Node* tmp = current->next;
         current->next = new_node;
+		//klamerki
         if(tmp == nullptr)
             new_node->next = nullptr;
         else
@@ -185,6 +190,7 @@ void add_to_choosen_position(List* list, Node* new_node, int position){
     }
 }
 Node* remove_from_choosen_position(List* list, int position){
+	//pozycje licz od zera
     if(position == 1){
         Node* tmp = list->first;
         list->first = tmp->next;
