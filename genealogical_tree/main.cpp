@@ -11,13 +11,14 @@ struct FamilyMember{
 struct Tree {
     FamilyMember * me;
 };
-void tree_options(Tree* const tree_ptr);
+void tree_options(Tree* tree_ptr);
 void menu();
 int put_number();
 void add_person(Tree* tree_ptr, FamilyMember* person);
+FamilyMember* find_leaf(FamilyMember* current,FamilyMember*person);
 FamilyMember* delete_person();
 void change_name();
-void display();
+void display(FamilyMember* current);
 
 int main()
 {
@@ -26,6 +27,74 @@ int main()
     tree_options(&tree_ptr);
 
     return 0;
+}
+void tree_options(Tree* tree_ptr){
+    for(;;){
+        menu();
+        int number = put_number();
+        switch(number){
+        case 1:{
+            FamilyMember* person = new FamilyMember;
+            person->name = new char[25];
+            person->father = nullptr;
+            person->mother = nullptr;
+            cout << "Podaj imie i nazwisko dodawanej osoby" << endl;
+            cin.get();
+            cin.getline(person->name,25);
+            add_person(tree_ptr,person);
+        }
+            break;
+        case 2:
+            delete_person();
+            break;
+        case 3:
+            change_name();
+            break;
+        case 4:{
+            FamilyMember* current =  tree_ptr->me;
+            display(current);
+        }
+            break;
+        case 5:
+            exit(0);
+        default:
+            cout << "Nie badz oslem! Wprowadz poprawny numer!" << endl;
+        }
+    }
+}
+void add_person(Tree* tree_ptr, FamilyMember* person){
+    if(tree_ptr->me == nullptr){
+        tree_ptr->me = person;
+        person->father = nullptr;
+        person->mother = nullptr;
+    }
+    else{
+        cout << "Aby dodac mame wpisz 'm',aby dodac ojca wpisz 'f' " << endl;
+        char sign;
+        cin >> sign;
+        if(sign == 'm'){
+            tree_ptr->me->mother = person;
+        }
+        else if(sign == 'f'){
+            tree_ptr->me->father = person;
+        }
+    }
+}
+FamilyMember* delete_person(){
+
+}
+void change_name(){
+
+}
+void display(FamilyMember* current){
+    if(current == nullptr){
+        return;
+    }
+    else{
+        cout << current->name << endl;
+        display(current->mother);
+        display(current->father);
+    }
 }
 void menu(){
     cout << endl;
@@ -51,59 +120,3 @@ int put_number(){
     }
     return value;
 }
-void tree_options(Tree* const tree_ptr){
-    for(;;){
-        menu();
-        int number = put_number();
-        switch(number){
-        case 1:{
-            FamilyMember* person = new FamilyMember;
-            person->name = new char[25];
-            cout << "Podaj imie i nazwisko" << endl;
-            cin.get();
-            cin.getline(person->name,25);
-            add_person(tree_ptr,person);
-        }
-            break;
-        case 2:
-            delete_person();
-            break;
-        case 3:
-            change_name();
-            break;
-        case 4:
-            display();
-            break;
-        case 5:
-            exit(0);
-        default:
-            cout << "Don't be dunky! Choose correct number!" << endl;
-        }
-    }
-}
-void add_person(Tree* tree_ptr, FamilyMember* person){
-    if(tree_ptr->me == nullptr){
-        tree_ptr->me = person;
-    }
-    else{
-        FamilyMember* current = tree_ptr->me;
-        while(current != nullptr){
-
-        }
-    }
-
-
-    person->father = nullptr;
-    person->mother = nullptr;
-}
-FamilyMember* delete_person(){
-
-}
-void change_name(){
-
-}
-void display(){
-
-}
-
-
