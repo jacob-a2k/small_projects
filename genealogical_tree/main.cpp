@@ -15,7 +15,7 @@ void tree_options(Tree* tree_ptr);
 void menu();
 int put_number();
 void add_person(Tree* tree_ptr, FamilyMember* person);
-FamilyMember* find_leaf(FamilyMember* current,FamilyMember*person);
+FamilyMember* find_leaf(FamilyMember* current,FamilyMember* wanted);
 FamilyMember* delete_person();
 void change_name();
 void display(FamilyMember* current);
@@ -65,18 +65,25 @@ void tree_options(Tree* tree_ptr){
 void add_person(Tree* tree_ptr, FamilyMember* person){
     if(tree_ptr->me == nullptr){
         tree_ptr->me = person;
-        person->father = nullptr;
-        person->mother = nullptr;
     }
     else{
+        FamilyMember* tmp = new FamilyMember;
+        tmp->name = new char[25];
+        tmp->father = nullptr;
+        tmp->mother = nullptr;
+        cout << "Podaj Imie i Nazwisko osoby do ktorej chcesz dodac rodzica!" << endl;
+        cin.getline(tmp->name,25);
+        FamilyMember* current = tree_ptr->me;
+        tmp = find_leaf(current,tmp);
+
         cout << "Aby dodac mame wpisz 'm',aby dodac ojca wpisz 'f' " << endl;
         char sign;
         cin >> sign;
         if(sign == 'm'){
-            tree_ptr->me->mother = person;
+            tmp->mother = person;
         }
         else if(sign == 'f'){
-            tree_ptr->me->father = person;
+            tmp->father = person;
         }
     }
 }
@@ -119,4 +126,14 @@ int put_number(){
         cin >> value;
     }
     return value;
+}
+FamilyMember* find_leaf(FamilyMember* current,FamilyMember* wanted){
+    if(*current->name == *wanted->name){
+		return current;
+	}
+	if(current == nullptr){
+		return 0;
+	}
+	find_leaf(current->mother, wanted);
+	find_leaf(current->father, wanted);
 }
