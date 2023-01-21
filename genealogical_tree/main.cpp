@@ -128,7 +128,9 @@ int put_number(){
     return value;
 }
 FamilyMember* find_leaf(FamilyMember* current,FamilyMember* wanted){
-    if(*current->name == *wanted->name){
+    cout << "///////////" << current->name << "/////////////" << endl;
+    cout << "\\\\\\\\\\\\" << wanted->name << "\\\\\\\\\\\\\\\\\\\\" << endl;
+    if(current->name == wanted->name){
 		return current;
 	}
 	if(current == nullptr){
