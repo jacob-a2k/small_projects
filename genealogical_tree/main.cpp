@@ -16,16 +16,32 @@ void tree_options(Tree* tree_ptr);
 void menu();
 int put_number();
 void add_person(Tree* tree_ptr, FamilyMember* person);
-FamilyMember* find_leaf(FamilyMember* current,char* wanted);
+FamilyMember* find_leaf(Tree* tree_ptr,char* wanted);
 FamilyMember* delete_person();
 void change_name();
 void display(FamilyMember* current);
 FamilyMember* new_member(char* c_name);
+FamilyMember* check_parents(FamilyMember* current, char* wanted);
 
 int main()
 {
+
+    FamilyMember* kuba = new_member("kuba");
+    FamilyMember* mama = new_member("mama");
+    FamilyMember* tata = new_member("tata");
+    FamilyMember* babciaM = new_member("babciaM");
+    FamilyMember* dziadekM = new_member("dziadekM");
+    FamilyMember* babciaT = new_member("babciaT");
+    FamilyMember* dziadekT = new_member("dziadekT");
+    kuba->mother = mama;
+    kuba->father = tata;
+    mama->mother = babciaM;
+    mama->father = dziadekM;
+    tata->mother = babciaT;
+    tata->father = dziadekT;
+
     Tree tree_ptr;
-    tree_ptr.me = nullptr;
+    tree_ptr.me = kuba;
     tree_options(&tree_ptr);
 
     return 0;
@@ -67,29 +83,30 @@ void add_person(Tree* tree_ptr, FamilyMember* person){
         tree_ptr->me = person;
     }
     else{
-        FamilyMember* current = nullptr;
+        FamilyMember* current = tree_ptr->me;;
         do{
-            current = tree_ptr->me;
+            //current = tree_ptr->me;
             char* full_name = new char[25];
             cout << "Podaj Imie i Nazwisko osoby do ktorej chcesz dodac rodzica!" << endl;
             cin.getline(full_name,25);
-            current = find_leaf(current,full_name);
+            current = find_leaf(tree_ptr,full_name);
             if(current == 0){
                 cout << "--------------------------------------------------------------" << endl;
                 cout << "Podana osoba nie znajduje sie w spisie drzewa genealogicznego!" << endl;
                 cout << "--------------------------------------------------------------" << endl;
             }
         }while(current == 0);
-        cout << "===============" << current << endl;   // sprawdzam czy current zwrocil jakis adress
-
         cout << "Aby dodac mame wpisz 'm',aby dodac ojca wpisz 'f' " << endl;
         char sign;
         cin >> sign;
         if(sign == 'm'){
-            current->mother = new_member(person->name);
+            current->mother = person;
         }
         else if(sign == 'f'){
-            current->father = new_member(person->name);
+            current->father = person;
+        }
+        else{
+
         }
     }
 }
@@ -133,18 +150,19 @@ int put_number(){
     }
     return value;
 }
-FamilyMember* find_leaf(FamilyMember* current,char* wanted){
-    if(current == nullptr){
-		return 0;
-	}
-	cout << "//////////" << current->name << endl; // sprawdzam co aktualnie znajduje sie w current
-	cout << "------------" << wanted <<  endl;     // sprawdzam co aktualnie znajduje sie w wanted
+FamilyMember* find_leaf(Tree* tree_ptr,char* wanted){
+     if(tree_ptr->me == nullptr){
+        return nullptr;
+     }
+     FamilyMember* current = tree_ptr->me;
+     if(strcmp(current->name,wanted) == 0 ){
+        return current;
+     }
+     FamilyMember* found = check_parents(current,wanted);
+     if(found != nullptr){
+        return found;
+     }//TODO
 
-    if(strcmp(current->name, wanted) == 0){
-		return current;
-	}
-	find_leaf(current->mother, wanted);
-	find_leaf(current->father, wanted);
 }
 FamilyMember* new_member(char* c_name){
     FamilyMember* person = new FamilyMember;
@@ -152,4 +170,30 @@ FamilyMember* new_member(char* c_name){
     person->father = nullptr;
     person->mother = nullptr;
     return person;
+}
+FamilyMember* check_parents(FamilyMember* current, char* wanted){
+    if(current->mother == nullptr){
+        if(current->father == nullptr){
+            return nullptr;
+        }
+        if(strcmp(current->father->name,wanted) == 0 ){
+            return current->father;
+        }
+        return check_parents(current->father,wanted);
+     }
+     if(strcmp(current->mother->name,wanted) == 0 ){
+         return current->mother;
+     }
+     FamilyMember* found = check_parents(current->mother,wanted);
+     if(found != nullptr){
+         return found;
+     }
+     if(current->father == nullptr){
+         return nullptr;
+     }
+     if(strcmp(current->father->name,wanted) == 0){
+         return current->father;
+
+     }
+     return check_parents(current->father,wanted);
 }
