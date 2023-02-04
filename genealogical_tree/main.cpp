@@ -17,11 +17,12 @@ void menu();
 int put_number();
 void add_person(Tree* tree_ptr, FamilyMember* person);
 FamilyMember* find_leaf(Tree* tree_ptr,char* wanted);
-FamilyMember* delete_person();
+FamilyMember* delete_person(Tree* tree_ptr, char* wanted);
 void change_name(Tree* tree_ptr, char* name);
 void display(FamilyMember* current);
 FamilyMember* new_member(char* c_name);
 FamilyMember* check_parents(FamilyMember* current, char* wanted);
+FamilyMember* find_parent(FamilyMember* current, char* wanted);
 
 int main()
 {
@@ -39,8 +40,7 @@ int main()
     mama->father = dziadekM;
     tata->mother = babciaT;
     tata->father = dziadekT;
-
-    */
+*/
 
     Tree tree_ptr;
     tree_ptr.me = nullptr;
@@ -62,8 +62,14 @@ void tree_options(Tree* tree_ptr){
             add_person(tree_ptr,person);
         }
             break;
-        case 2:
-            delete_person();
+        case 2:{
+            char* search_name = new char[25];
+            cout << "Podaj imie, ktore chcesz usunac: ";
+            cin.get();
+            cin.getline(search_name,25);
+            FamilyMember* deleted = delete_person(tree_ptr,search_name);
+                delete deleted;
+        }
             break;
         case 3:{
             char* name = new char[25];
@@ -114,8 +120,81 @@ void add_person(Tree* tree_ptr, FamilyMember* person){
         }
     }
 }
-FamilyMember* delete_person(){
+FamilyMember* delete_person(Tree* tree_ptr, char* wanted){
+    if(tree_ptr->me == nullptr){
+        cout << "Drzewo jest puste! Nie mozna usunac zadnego wezla!" << endl;
+        return nullptr;
+    }
+    else{
+        FamilyMember* current = tree_ptr->me;
+        if(current->father == nullptr && current->mother == nullptr){
+            if(strcmp(current->name,wanted) == 0){
+            tree_ptr->me = nullptr;
+            return current;
+            }
+        }
+        else if(strcmp(current->name,wanted) == 0){
+            cout << "Nie mozna usunac osoby, poniewaz sa juz do niej przypisani rodzice!" << endl;
+            cout << "Usun najpierw rodzica!" << endl;
+            return nullptr;
+        }
 
+        FamilyMember* penultimate = nullptr;
+        penultimate = find_parent(current,wanted);
+        if(penultimate != nullptr){
+            if(strcmp(penultimate->father->name,wanted) == 0){
+                if(penultimate->father->father == nullptr && penultimate->father->mother == nullptr){
+                    penultimate->father = nullptr;
+                    return penultimate->father;
+                }
+                else{
+                    cout << "Nie mozna usunac osoby, poniewaz sa juz do niej przypisani rodzice!" << endl;
+                    cout << "Usun najpierw rodzica!" << endl;
+                    return nullptr;
+                }
+            }
+            else if(strcmp(penultimate->mother->name,wanted) == 0){
+                if(penultimate->mother->father == nullptr && penultimate->mother->mother == nullptr){
+                    penultimate->mother = nullptr;
+                    return penultimate->mother;
+                }
+                else{
+                    cout << "Nie mozna usunac osoby, poniewaz sa juz do niej przypisani rodzice!" << endl;
+                    cout << "Usun najpierw rodzica!" << endl;
+                    return nullptr;
+                }
+            }
+        }
+        else{
+            cout << "Nie znaleziono podanej osoby!" << endl;
+            return nullptr;
+        }
+    }
+}
+FamilyMember* find_parent(FamilyMember* current, char* wanted){
+    if(current->mother == nullptr){
+        if(current->father == nullptr){
+            return nullptr;
+        }
+        if(strcmp(current->father->name,wanted) == 0){
+            return current;
+        }
+        return find_parent(current->father,wanted);
+    }
+    if(strcmp(current->mother->name,wanted) == 0){
+        return current;
+    }
+    FamilyMember* found = find_parent(current->mother,wanted);
+    if(found != nullptr){
+        return found;
+    }
+    if(current->father == nullptr){
+        return nullptr;
+    }
+    if(strcmp(current->father->name,wanted) == 0){
+        return current;
+    }
+    return find_parent(current->father,wanted);
 }
 void change_name(Tree* tree_ptr, char* name){
     if(tree_ptr->me == nullptr){
