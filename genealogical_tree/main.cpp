@@ -142,34 +142,38 @@ FamilyMember* delete_person(Tree* tree_ptr, char* wanted){
         FamilyMember* penultimate = nullptr;
         penultimate = find_parent(current,wanted);
         if(penultimate != nullptr){
-            if(strcmp(penultimate->father->name,wanted) == 0){
-                if(penultimate->father->father == nullptr && penultimate->father->mother == nullptr){
-                    penultimate->father = nullptr;
-                    return penultimate->father;
-                }
-                else{
-                    cout << "Nie mozna usunac osoby, poniewaz sa juz do niej przypisani rodzice!" << endl;
-                    cout << "Usun najpierw rodzica!" << endl;
-                    return nullptr;
+            if(penultimate->father != nullptr){
+                if(strcmp(penultimate->father->name,wanted) == 0){
+                    if(penultimate->father->father == nullptr && penultimate->father->mother == nullptr){
+                        penultimate->father = nullptr;
+                        return penultimate->father;
+                    }
+                    else{
+                        cout << "Nie mozna usunac osoby, poniewaz sa juz do niej przypisani rodzice!" << endl;
+                        cout << "Usun najpierw rodzica!" << endl;
+                        return nullptr;
+                    }
                 }
             }
-            else if(strcmp(penultimate->mother->name,wanted) == 0){
-                if(penultimate->mother->father == nullptr && penultimate->mother->mother == nullptr){
-                    penultimate->mother = nullptr;
-                    return penultimate->mother;
-                }
-                else{
-                    cout << "Nie mozna usunac osoby, poniewaz sa juz do niej przypisani rodzice!" << endl;
-                    cout << "Usun najpierw rodzica!" << endl;
-                    return nullptr;
+            else if(penultimate->mother != nullptr){
+                    if(strcmp(penultimate->mother->name,wanted) == 0){
+                    if(penultimate->mother->father == nullptr && penultimate->mother->mother == nullptr){
+                        penultimate->mother = nullptr;
+                        return penultimate->mother;
+                    }
+                    else{
+                        cout << "Nie mozna usunac osoby, poniewaz sa juz do niej przypisani rodzice!" << endl;
+                        cout << "Usun najpierw rodzica!" << endl;
+                        return nullptr;
+                    }
                 }
             }
         }
         else{
             cout << "Nie znaleziono podanej osoby!" << endl;
-            return nullptr;
         }
     }
+    return nullptr;
 }
 FamilyMember* find_parent(FamilyMember* current, char* wanted){
     if(current->mother == nullptr){
