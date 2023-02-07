@@ -253,50 +253,36 @@ int put_number(){
     }
     return value;
 }
-FamilyMember* find_leaf(Tree* tree_ptr,char* wanted){
-     if(tree_ptr->me == nullptr){
-        return nullptr;
-     }
-     FamilyMember* current = tree_ptr->me;
-     if(strcmp(current->name,wanted) == 0 ){
-        return current;
-     }
-     FamilyMember* found = check_parents(current,wanted);
-     if(found != nullptr){
-        return found;
-     }//TODO
 
+FamilyMember* find_leaf(Tree* tree_ptr,char* wanted){
+	FamilyMember* current = tree_ptr->me;
+	current = check_parents(current,wanted);
+	if(current != nullptr){
+		return current;
+	}//TODO
 }
+
+FamilyMember* check_parents(FamilyMember* current, char* wanted){
+	if(current == nullptr){
+		return nullptr;
+	}
+	else{
+		if(strcmp(current->name,wanted) == 0){
+			return current;
+		}
+		FamilyMember* found = nullptr;
+		found = check_parents(current->mother,wanted);
+		if(found != nullptr){
+			return found;
+		}
+        return check_parents(current->father,wanted);
+	}
+}
+
 FamilyMember* new_member(char* c_name){
     FamilyMember* person = new FamilyMember;
     person->name = c_name;
     person->father = nullptr;
     person->mother = nullptr;
     return person;
-}
-FamilyMember* check_parents(FamilyMember* current, char* wanted){
-    if(current->mother == nullptr){
-        if(current->father == nullptr){
-            return nullptr;
-        }
-        if(strcmp(current->father->name,wanted) == 0 ){
-            return current->father;
-        }
-        return check_parents(current->father,wanted);
-     }
-     if(strcmp(current->mother->name,wanted) == 0 ){
-         return current->mother;
-     }
-     FamilyMember* found = check_parents(current->mother,wanted);
-     if(found != nullptr){
-         return found;
-     }
-     if(current->father == nullptr){
-         return nullptr;
-     }
-     if(strcmp(current->father->name,wanted) == 0){
-         return current->father;
-
-     }
-     return check_parents(current->father,wanted);
 }
