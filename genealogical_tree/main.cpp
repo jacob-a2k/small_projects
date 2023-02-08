@@ -255,28 +255,22 @@ int put_number(){
 }
 
 FamilyMember* find_leaf(Tree* tree_ptr,char* wanted){
-	FamilyMember* current = tree_ptr->me;
-	current = check_parents(current,wanted);
-	if(current != nullptr){
-		return current;
-	}//TODO
+	return check_parents(tree_ptr->me, wanted);
 }
 
 FamilyMember* check_parents(FamilyMember* current, char* wanted){
 	if(current == nullptr){
 		return nullptr;
 	}
-	else{
-		if(strcmp(current->name,wanted) == 0){
-			return current;
-		}
-		FamilyMember* found = nullptr;
-		found = check_parents(current->mother,wanted);
-		if(found != nullptr){
-			return found;
-		}
-        return check_parents(current->father,wanted);
+	
+	if(strcmp(current->name, wanted) == 0){
+		return current;
 	}
+	FamilyMember* found = check_parents(current->mother, wanted);
+	if(found != nullptr){
+		return found;
+	}
+    return check_parents(current->father, wanted);
 }
 
 FamilyMember* new_member(char* c_name){
