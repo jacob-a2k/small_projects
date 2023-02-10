@@ -129,8 +129,8 @@ FamilyMember* delete_person(Tree* tree_ptr, char* wanted){
         cout << "Drzewo jest puste! Nie mozna usunac zadnego wezla!" << endl;
         return nullptr;
     }
-    current->child = new FamilyMember;
-    current->child = look_up_any_node(current,wanted);
+    current->child = new FamilyMember;//po co to?
+    current->child = look_up_any_node(current,wanted); //po co takie przypisanie?
     if(current->child != nullptr){
         bool can_remove = can_delete(current->child);
         if(can_remove){
