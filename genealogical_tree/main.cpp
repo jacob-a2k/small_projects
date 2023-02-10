@@ -8,6 +8,7 @@ struct FamilyMember{
     FamilyMember * mother;
     FamilyMember * father;
     char * name;
+    FamilyMember* child;
 };
 struct Tree {
     FamilyMember * me;
@@ -21,8 +22,9 @@ FamilyMember* delete_person(Tree* tree_ptr, char* wanted);
 void change_name(Tree* tree_ptr, char* name);
 void display(FamilyMember* current);
 FamilyMember* new_member(char* c_name);
-FamilyMember* check_parents(FamilyMember* current, char* wanted);
-FamilyMember* find_parent(FamilyMember* current, char* wanted);
+FamilyMember* look_up_any_node(FamilyMember* current, char* wanted);
+bool can_delete(FamilyMember* found);
+void delete_node(FamilyMember* current,FamilyMember* found);
 
 int main()
 {
@@ -69,6 +71,7 @@ void tree_options(Tree* tree_ptr){
             cin.getline(search_name,25);
             FamilyMember* deleted = delete_person(tree_ptr,search_name);
                 delete deleted;
+                deleted = nullptr;
         }
             break;
         case 3:{
@@ -121,84 +124,30 @@ void add_person(Tree* tree_ptr, FamilyMember* person){
     }
 }
 FamilyMember* delete_person(Tree* tree_ptr, char* wanted){
-    if(tree_ptr->me == nullptr){
+    FamilyMember* current = tree_ptr->me;
+    if(current == nullptr){
         cout << "Drzewo jest puste! Nie mozna usunac zadnego wezla!" << endl;
         return nullptr;
     }
-    else{
-        FamilyMember* current = tree_ptr->me;
-        if(current->father == nullptr && current->mother == nullptr){
-            if(strcmp(current->name,wanted) == 0){
-            tree_ptr->me = nullptr;
-            return current;
+    current->child = new FamilyMember;
+    current->child = look_up_any_node(current,wanted);
+    if(current->child != nullptr){
+        bool can_remove = can_delete(current->child);
+        if(can_remove){
+            if(current == current->child){
+                current = nullptr;
             }
-        }
-        else if(strcmp(current->name,wanted) == 0){
-            cout << "Nie mozna usunac osoby, poniewaz sa juz do niej przypisani rodzice!" << endl;
-            cout << "Usun najpierw rodzica!" << endl;
-            return nullptr;
-        }
-
-        FamilyMember* penultimate = nullptr;
-        penultimate = find_parent(current,wanted);
-        if(penultimate != nullptr){
-            if(penultimate->father != nullptr){
-                if(strcmp(penultimate->father->name,wanted) == 0){
-                    if(penultimate->father->father == nullptr && penultimate->father->mother == nullptr){
-                        penultimate->father = nullptr;
-                        return penultimate->father;
-                    }
-                    else{
-                        cout << "Nie mozna usunac osoby, poniewaz sa juz do niej przypisani rodzice!" << endl;
-                        cout << "Usun najpierw rodzica!" << endl;
-                        return nullptr;
-                    }
-                }
+            else{
+                //delete_node(current,found);
             }
-            else if(penultimate->mother != nullptr){
-                    if(strcmp(penultimate->mother->name,wanted) == 0){
-                    if(penultimate->mother->father == nullptr && penultimate->mother->mother == nullptr){
-                        penultimate->mother = nullptr;
-                        return penultimate->mother;
-                    }
-                    else{
-                        cout << "Nie mozna usunac osoby, poniewaz sa juz do niej przypisani rodzice!" << endl;
-                        cout << "Usun najpierw rodzica!" << endl;
-                        return nullptr;
-                    }
-                }
-            }
+            return current->child;
         }
-        else{
-            cout << "Nie znaleziono podanej osoby!" << endl;
-        }
-    }
-    return nullptr;
-}
-FamilyMember* find_parent(FamilyMember* current, char* wanted){
-    if(current->mother == nullptr){
-        if(current->father == nullptr){
-            return nullptr;
-        }
-        if(strcmp(current->father->name,wanted) == 0){
-            return current;
-        }
-        return find_parent(current->father,wanted);
-    }
-    if(strcmp(current->mother->name,wanted) == 0){
-        return current;
-    }
-    FamilyMember* found = find_parent(current->mother,wanted);
-    if(found != nullptr){
-        return found;
-    }
-    if(current->father == nullptr){
+        cout << "Nie mozna usunac obiektu, poniewaz posiada rodzicow! " << endl;
+        cout << "Usun najpierw rodzicow! " << endl;
         return nullptr;
     }
-    if(strcmp(current->father->name,wanted) == 0){
-        return current;
-    }
-    return find_parent(current->father,wanted);
+    cout << "Nie znaleziono podanej osoby! " << endl;
+    return nullptr;
 }
 void change_name(Tree* tree_ptr, char* name){
     if(tree_ptr->me == nullptr){
@@ -253,30 +202,36 @@ int put_number(){
     }
     return value;
 }
-
 FamilyMember* find_leaf(Tree* tree_ptr,char* wanted){
-	return check_parents(tree_ptr->me, wanted);
+	return look_up_any_node(tree_ptr->me, wanted);
 }
-
-FamilyMember* check_parents(FamilyMember* current, char* wanted){
+FamilyMember* look_up_any_node(FamilyMember* current, char* wanted){
 	if(current == nullptr){
 		return nullptr;
 	}
-	
+
 	if(strcmp(current->name, wanted) == 0){
 		return current;
 	}
-	FamilyMember* found = check_parents(current->mother, wanted);
+	FamilyMember* found = look_up_any_node(current->mother, wanted);
 	if(found != nullptr){
 		return found;
 	}
-    return check_parents(current->father, wanted);
+    return look_up_any_node(current->father, wanted);
 }
-
 FamilyMember* new_member(char* c_name){
     FamilyMember* person = new FamilyMember;
     person->name = c_name;
     person->father = nullptr;
     person->mother = nullptr;
     return person;
+}
+bool can_delete(FamilyMember* found){
+	if(found->mother != nullptr){
+		return false;
+	}
+	else if(found->father != nullptr){
+		return false;
+	}
+	return true;
 }
