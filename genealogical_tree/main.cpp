@@ -24,26 +24,10 @@ void display(FamilyMember* current);
 FamilyMember* new_member(char* c_name);
 FamilyMember* look_up_any_node(FamilyMember* current, char* wanted);
 bool can_delete(FamilyMember* found);
-void delete_node(FamilyMember* current,FamilyMember* found);
+void delete_node(FamilyMember* to_delete);
 
 int main()
 {
-/*
-    FamilyMember* kuba = new_member("kuba");
-    FamilyMember* mama = new_member("mama");
-    FamilyMember* tata = new_member("tata");
-    FamilyMember* babciaM = new_member("babciaM");
-    FamilyMember* dziadekM = new_member("dziadekM");
-    FamilyMember* babciaT = new_member("babciaT");
-    FamilyMember* dziadekT = new_member("dziadekT");
-    kuba->mother = mama;
-    kuba->father = tata;
-    mama->mother = babciaM;
-    mama->father = dziadekM;
-    tata->mother = babciaT;
-    tata->father = dziadekT;
-*/
-
     Tree tree_ptr;
     tree_ptr.me = nullptr;
     tree_options(&tree_ptr);
@@ -97,15 +81,17 @@ void tree_options(Tree* tree_ptr){
 }
 void add_person(Tree* tree_ptr, FamilyMember* person){
     if(tree_ptr->me == nullptr){
+        person->child = person;
         tree_ptr->me = person;
+
     }
     else{
         FamilyMember* current = nullptr;
         do{
-            char* full_name = new char[25];
-            cout << "Podaj Imie i Nazwisko osoby do ktorej chcesz dodac rodzica!" << endl;
-            cin.getline(full_name,25);
-            current = find_leaf(tree_ptr,full_name);
+            char* child_name = new char[25];
+            cout << "Podaj Imie i Nazwisko dziecka, do ktorego chcesz dodac rodzica!" << endl;
+            cin.getline(child_name,25);
+            current = find_leaf(tree_ptr,child_name);
             if(current == 0){
                 cout << "--------------------------------------------------------------" << endl;
                 cout << "Podana osoba nie znajduje sie w spisie drzewa genealogicznego!" << endl;
@@ -117,9 +103,11 @@ void add_person(Tree* tree_ptr, FamilyMember* person){
         cin >> sign;
         if(sign == 'm'){
             current->mother = person;
+            person->child = current;
         }
         else if(sign == 'f'){
             current->father = person;
+            person->child = current;
         }
     }
 }
@@ -129,18 +117,17 @@ FamilyMember* delete_person(Tree* tree_ptr, char* wanted){
         cout << "Drzewo jest puste! Nie mozna usunac zadnego wezla!" << endl;
         return nullptr;
     }
-    current->child = new FamilyMember;//po co to?
-    current->child = look_up_any_node(current,wanted); //po co takie przypisanie?
-    if(current->child != nullptr){
-        bool can_remove = can_delete(current->child);
+    FamilyMember* found = look_up_any_node(current,wanted);
+    if(found != nullptr){
+        bool can_remove = can_delete(found);
         if(can_remove){
-            if(current == current->child){
-                current = nullptr;
+            if(current == found){
+                tree_ptr->me = nullptr;
             }
             else{
-                //delete_node(current,found);
+                delete_node(found);
             }
-            return current->child;
+            return found;
         }
         cout << "Nie mozna usunac obiektu, poniewaz posiada rodzicow! " << endl;
         cout << "Usun najpierw rodzicow! " << endl;
@@ -224,6 +211,7 @@ FamilyMember* new_member(char* c_name){
     person->name = c_name;
     person->father = nullptr;
     person->mother = nullptr;
+    person->child = nullptr;
     return person;
 }
 bool can_delete(FamilyMember* found){
@@ -234,4 +222,12 @@ bool can_delete(FamilyMember* found){
 		return false;
 	}
 	return true;
+}
+void delete_node(FamilyMember* to_delete){
+	if(to_delete->child->mother == to_delete){
+		to_delete->child->mother = nullptr;
+	}
+	else{
+		to_delete->child->father = nullptr;
+	}
 }
