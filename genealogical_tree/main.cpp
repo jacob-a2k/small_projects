@@ -26,6 +26,7 @@ FamilyMember* look_up_any_node(FamilyMember* current, char* wanted);
 bool can_delete(FamilyMember* found);
 FamilyMember* delete_node(FamilyMember* to_delete);
 char put_character();
+bool is_person_in_tree(FamilyMember* current, char* search_person);
 
 int main()
 {
@@ -45,6 +46,11 @@ void tree_options(Tree* tree_ptr){
             cout << "Podaj imie i nazwisko dodawanej osoby!" << endl;
             cin.get();
             cin.getline(full_name,25);
+            bool is_in_tree = is_person_in_tree(tree_ptr->me,full_name);
+            if(is_in_tree){
+                cout << "Podana osoba znajduje sie juz w spisie drzewa genealogicznego!" << endl;
+                continue;
+            }
             FamilyMember* person = new_member(full_name);
             add_person(tree_ptr,person);
         }
@@ -250,4 +256,17 @@ char put_character(){
 		cin >> mark;
 	}
 	return mark;
+}
+bool is_person_in_tree(FamilyMember* current, char* search_person){
+	if(current == nullptr){
+		return false;
+	}
+	if(strcmp(current->name,search_person) == 0){
+		return true;
+	}
+	bool found = is_person_in_tree(current->mother,search_person);
+	if(found != false){
+		return true;
+	}
+	return is_person_in_tree(current->father,search_person);
 }
