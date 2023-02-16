@@ -54,7 +54,6 @@ void tree_options(Tree* tree_ptr){
             cin.get();
             cin.getline(search_name,25);
             FamilyMember* deleted = delete_person(tree_ptr,search_name);
-                cout << "--------------" << deleted << endl;
                 delete deleted;
                 deleted = nullptr;
                 delete search_name;
@@ -232,11 +231,10 @@ FamilyMember* delete_node(FamilyMember* to_delete){
 	if(to_delete->child->mother == to_delete){
         temp = to_delete->child->mother;
 		to_delete->child->mother = nullptr;
-		return temp;
 	}
 	else{
 	    temp = to_delete->child->father;
 		to_delete->child->father = nullptr;
-		return temp;
 	}
+	return temp;
 }
