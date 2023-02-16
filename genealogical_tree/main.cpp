@@ -54,8 +54,10 @@ void tree_options(Tree* tree_ptr){
             cin.get();
             cin.getline(search_name,25);
             FamilyMember* deleted = delete_person(tree_ptr,search_name);
-                delete deleted;
+                delete deleted;     // tutaj dealokuje wybrana osobe
                 deleted = nullptr;
+                delete search_name;
+                search_name = nullptr;
         }
             break;
         case 3:{
@@ -65,6 +67,7 @@ void tree_options(Tree* tree_ptr){
             cin.getline(name,25);
             change_name(tree_ptr,name);
             delete name;
+            name = nullptr;
         }
             break;
         case 4:{
@@ -82,9 +85,7 @@ void tree_options(Tree* tree_ptr){
 
 void add_person(Tree* tree_ptr, FamilyMember* person){
     if(tree_ptr->me == nullptr){
-        person->child = person;//ktoś nie moze byc wlasnym dzieckiem
         tree_ptr->me = person;
-
     }
     else{
         FamilyMember* current = nullptr;
@@ -98,18 +99,19 @@ void add_person(Tree* tree_ptr, FamilyMember* person){
                 cout << "Podana osoba nie znajduje sie w spisie drzewa genealogicznego!" << endl;
                 cout << "--------------------------------------------------------------" << endl;
             }
+            delete child_name;
+            child_name = nullptr;
         }while(current == 0);
         cout << "Aby dodac mame wpisz 'm',aby dodac ojca wpisz 'f' " << endl;
         char sign;
         cin >> sign;
         if(sign == 'm'){
             current->mother = person;
-            person->child = current;
         }
         else if(sign == 'f'){
             current->father = person;
-            person->child = current;
         }
+        person->child = current;
     }
 }
 FamilyMember* delete_person(Tree* tree_ptr, char* wanted){
@@ -224,12 +226,13 @@ bool can_delete(FamilyMember* found){
 	}
 	return true;
 }
-//dealokacjia pamięci przed wynullowaniew wskaźnika - tak masz wyciek pamieci
 void delete_node(FamilyMember* to_delete){
 	if(to_delete->child->mother == to_delete){
+        //delete to_delete->child->mother;  //gdy dodalem dealokacje tutaj i nizej to otrzymalem bład podwojnego dealokowania
 		to_delete->child->mother = nullptr;
 	}
 	else{
+	    //delete to_delete->child->father;
 		to_delete->child->father = nullptr;
 	}
 }
