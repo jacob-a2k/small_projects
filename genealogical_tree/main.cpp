@@ -79,9 +79,10 @@ void tree_options(Tree* tree_ptr){
         }
     }
 }
+
 void add_person(Tree* tree_ptr, FamilyMember* person){
     if(tree_ptr->me == nullptr){
-        person->child = person;
+        person->child = person;//ktoś nie moze byc wlasnym dzieckiem
         tree_ptr->me = person;
 
     }
