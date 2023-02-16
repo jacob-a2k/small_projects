@@ -24,7 +24,7 @@ void display(FamilyMember* current);
 FamilyMember* new_member(char* c_name);
 FamilyMember* look_up_any_node(FamilyMember* current, char* wanted);
 bool can_delete(FamilyMember* found);
-void delete_node(FamilyMember* to_delete);
+FamilyMember* delete_node(FamilyMember* to_delete);
 
 int main()
 {
@@ -54,7 +54,8 @@ void tree_options(Tree* tree_ptr){
             cin.get();
             cin.getline(search_name,25);
             FamilyMember* deleted = delete_person(tree_ptr,search_name);
-                delete deleted;     // tutaj dealokuje wybrana osobe
+                cout << "--------------" << deleted << endl;
+                delete deleted;
                 deleted = nullptr;
                 delete search_name;
                 search_name = nullptr;
@@ -128,7 +129,7 @@ FamilyMember* delete_person(Tree* tree_ptr, char* wanted){
                 tree_ptr->me = nullptr;
             }
             else{
-                delete_node(found);
+                found = delete_node(found);
             }
             return found;
         }
@@ -226,13 +227,16 @@ bool can_delete(FamilyMember* found){
 	}
 	return true;
 }
-void delete_node(FamilyMember* to_delete){
+FamilyMember* delete_node(FamilyMember* to_delete){
+    FamilyMember* temp = nullptr;
 	if(to_delete->child->mother == to_delete){
-        //delete to_delete->child->mother;  //gdy dodalem dealokacje tutaj i nizej to otrzymalem bład podwojnego dealokowania
+        temp = to_delete->child->mother;
 		to_delete->child->mother = nullptr;
+		return temp;
 	}
 	else{
-	    //delete to_delete->child->father;
+	    temp = to_delete->child->father;
 		to_delete->child->father = nullptr;
+		return temp;
 	}
 }
