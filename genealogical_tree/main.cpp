@@ -223,6 +223,7 @@ bool can_delete(FamilyMember* found){
 	}
 	return true;
 }
+//dealokacjia pamięci przed wynullowaniew wskaźnika - tak masz wyciek pamieci
 void delete_node(FamilyMember* to_delete){
 	if(to_delete->child->mother == to_delete){
 		to_delete->child->mother = nullptr;
