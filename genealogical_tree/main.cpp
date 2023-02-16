@@ -25,6 +25,7 @@ FamilyMember* new_member(char* c_name);
 FamilyMember* look_up_any_node(FamilyMember* current, char* wanted);
 bool can_delete(FamilyMember* found);
 FamilyMember* delete_node(FamilyMember* to_delete);
+char put_character();
 
 int main()
 {
@@ -103,8 +104,7 @@ void add_person(Tree* tree_ptr, FamilyMember* person){
             child_name = nullptr;
         }while(current == 0);
         cout << "Aby dodac mame wpisz 'm',aby dodac ojca wpisz 'f' " << endl;
-        char sign;
-        cin >> sign;
+        char sign = put_character();
         if(sign == 'm'){
             current->mother = person;
         }
@@ -129,6 +129,7 @@ FamilyMember* delete_person(Tree* tree_ptr, char* wanted){
             }
             else{
                 found = delete_node(found);
+
             }
             return found;
         }
@@ -237,4 +238,16 @@ FamilyMember* delete_node(FamilyMember* to_delete){
 		to_delete->child->father = nullptr;
 	}
 	return temp;
+}
+char put_character(){
+	char mark;
+	cin >> mark;
+	while(mark != 'm' && mark != 'f'){
+		cout << "Blad! Oczekuje literki m - mother lub f - father!" << endl;
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Wprowadz ponownie!" << endl;
+		cin >> mark;
+	}
+	return mark;
 }
