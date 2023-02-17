@@ -24,7 +24,7 @@ void display(FamilyMember* current);
 FamilyMember* new_member(char* c_name);
 FamilyMember* look_up_any_node(FamilyMember* current, char* wanted);
 bool can_delete(FamilyMember* found);
-FamilyMember* delete_node(FamilyMember* to_delete);
+void delete_node(FamilyMember* to_delete);
 char put_character();
 bool is_person_in_tree(FamilyMember* current, char* search_person);
 
