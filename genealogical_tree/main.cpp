@@ -51,8 +51,7 @@ void tree_options(Tree* tree_ptr){
                 cout << "Podana osoba znajduje sie juz w spisie drzewa genealogicznego!" << endl;
                 continue;
             }
-			FamilyMember* person = new FamilyMember;
-            FamilyMember* person = fillMember(person, full_name);
+            FamilyMember* person = new_member(full_name);
             add_person(tree_ptr,person);
         }
             break;
