@@ -51,7 +51,8 @@ void tree_options(Tree* tree_ptr){
                 cout << "Podana osoba znajduje sie juz w spisie drzewa genealogicznego!" << endl;
                 continue;
             }
-            FamilyMember* person = new_member(full_name);
+			FamilyMember* person = new FamilyMember;
+            FamilyMember* person = fillMember(person, full_name);
             add_person(tree_ptr,person);
         }
             break;
@@ -61,10 +62,10 @@ void tree_options(Tree* tree_ptr){
             cin.get();
             cin.getline(search_name,25);
             FamilyMember* deleted = delete_person(tree_ptr,search_name);
-                delete deleted;
-                deleted = nullptr;
-                delete search_name;
-                search_name = nullptr;
+            delete deleted;
+            deleted = nullptr;
+            delete search_name;
+            search_name = nullptr;
         }
             break;
         case 3:{
@@ -134,8 +135,7 @@ FamilyMember* delete_person(Tree* tree_ptr, char* wanted){
                 tree_ptr->me = nullptr;
             }
             else{
-                found = delete_node(found);
-
+                delete_node(found);
             }
             return found;
         }
@@ -233,17 +233,13 @@ bool can_delete(FamilyMember* found){
 	}
 	return true;
 }
-FamilyMember* delete_node(FamilyMember* to_delete){
-    FamilyMember* temp = nullptr;
+void delete_node(FamilyMember* to_delete){
 	if(to_delete->child->mother == to_delete){
-        temp = to_delete->child->mother;
 		to_delete->child->mother = nullptr;
 	}
 	else{
-	    temp = to_delete->child->father;
 		to_delete->child->father = nullptr;
 	}
-	return temp;
 }
 char put_character(){
 	char mark;
