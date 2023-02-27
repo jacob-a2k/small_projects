@@ -8,21 +8,22 @@ struct FamilyMember{
     FamilyMember * mother;
     FamilyMember * father;
     char * name;
-    FamilyMember* child;
+
 };
 struct Tree {
     FamilyMember * me;
 };
 void menu();
 int put_number();
-FamilyMember* find(Tree* tree_ptr,char* wanted);
+FamilyMember** find(Tree* tree_ptr,char* wanted);
 void display(FamilyMember* current);
 void fill_member(FamilyMember* person, char* c_name);
-FamilyMember* look_up_any_node(FamilyMember* current, char* wanted);
+FamilyMember** look_up_any_node(FamilyMember** current, char* wanted);
 bool can_delete(FamilyMember* found);
 char put_character();
 bool is_person_in_tree(FamilyMember* current, char* search_person);
 void clear_member(FamilyMember* member);
+void fill_sample_data(Tree* tree_ptr);
 
 void add_person(Tree* tree_ptr);
 void remove_person(Tree* tree_ptr);
@@ -34,6 +35,7 @@ int main()
 {
     Tree tree_ptr;
     tree_ptr.me = nullptr;
+    fill_sample_data(&tree_ptr);
     tree_options(&tree_ptr);
 
     return 0;
@@ -94,29 +96,32 @@ int put_number(){
     }
     return value;
 }
-FamilyMember* find(Tree* tree_ptr,char* wanted){
-	return look_up_any_node(tree_ptr->me, wanted);
+FamilyMember** find(Tree* tree_ptr,char* wanted){
+	return look_up_any_node(&(tree_ptr->me), wanted);
 }
-FamilyMember* look_up_any_node(FamilyMember* current, char* wanted){
-	if(current == nullptr){
+FamilyMember** look_up_any_node(FamilyMember** current_adr, char* wanted){
+	if(current_adr == nullptr){
 		return nullptr;
 	}
-
+    FamilyMember* current = *current_adr;
+    if(current == nullptr){
+        return nullptr;
+    }
 	if(strcmp(current->name, wanted) == 0){
-		return current;
+		return current_adr;
 	}
-	FamilyMember* found = look_up_any_node(current->mother, wanted);
+	FamilyMember** found = look_up_any_node(&(current->mother), wanted);
 	if(found != nullptr){
 		return found;
 	}
-    return look_up_any_node(current->father, wanted);
+    return look_up_any_node(&(current->father), wanted);
 }
 void fill_member(FamilyMember* person,char* c_name){
     person->name = new char[strlen(c_name)+1];
     strcpy(person->name,c_name);
     person->father = nullptr;
     person->mother = nullptr;
-    person->child = nullptr;
+    //person->child = nullptr;
 }
 bool can_delete(FamilyMember* found){
 	if(found->mother != nullptr){
@@ -178,13 +183,14 @@ void add_person(Tree* tree_ptr){
     cout << "Podaj Imie i Nazwisko dziecka, do ktorego chcesz dodac rodzica!" << endl;
     cin.getline(child_name,25);
 
-    FamilyMember* child = find(tree_ptr,child_name);
-    if(child == nullptr){
+    FamilyMember** child_adr = find(tree_ptr,child_name);
+    if(child_adr == nullptr){
         cout << "--------------------------------------------------------------" << endl;
         cout << "Podana osoba nie znajduje sie w spisie drzewa genealogicznego!" << endl;
         cout << "--------------------------------------------------------------" << endl;
         return;
     }
+    FamilyMember* child = *child_adr;
     FamilyMember* person = new FamilyMember;
     fill_member(person,full_name);
 
@@ -196,7 +202,7 @@ void add_person(Tree* tree_ptr){
     else if(sign == 'f'){
         child->father = person;
     }
-    person->child = child;
+    //person->child = child;
 }
 void remove_person(Tree* tree_ptr){
     if(tree_ptr->me == nullptr){
@@ -208,31 +214,20 @@ void remove_person(Tree* tree_ptr){
     cin.get();
     cin.getline(search_name,25);
 
-    FamilyMember* found = find(tree_ptr,search_name);
+    FamilyMember** found = find(tree_ptr,search_name);
     if(found == nullptr){
         cout << "Nie znaleziono podanej osoby! " << endl;
         return;
     }
-    bool can_remove = can_delete(found);
+    bool can_remove = can_delete(*found);
     if(!can_remove){
         cout << "Nie mozna usunac obiektu, poniewaz posiada rodzicow! " << endl;
         cout << "Usun najpierw rodzicow! " << endl;
         return;
     }
-    if(tree_ptr->me == found){
-        tree_ptr->me = nullptr;
-    }
-    else{
-        if(found->child->mother == found){
-            found->child->mother = nullptr;
-        }
-        else{
-            found->child->father = nullptr;
-        }
-    }
-    clear_member(found);
-    delete found;
-    found = nullptr;
+    clear_member(*found);
+    delete *found;
+    *found = nullptr;
 }
 void change_name(Tree* tree_ptr){
     if(tree_ptr->me == nullptr){
@@ -243,11 +238,12 @@ void change_name(Tree* tree_ptr){
     cout << "Podaj imie i nazwisko ktore chcesz zmienic!" << endl;
     cin.get();
     cin.getline(name,25);
-    FamilyMember* current = find(tree_ptr,name);
-    if(current == nullptr){
+    FamilyMember** current_adr = find(tree_ptr,name);
+    if(current_adr == nullptr){
         cout << "Czlonek rodziny o godnosci " << name << " nie zostal znaleziony!" << endl;
         return;
     }
+    FamilyMember* current = *current_adr;
     char new_name[25];
     cout << "Podaj nowe dane!" << endl;
     cin.getline(new_name,25);
@@ -255,4 +251,20 @@ void change_name(Tree* tree_ptr){
 }
 void display(Tree* tree_ptr){
     display(tree_ptr->me);
+}
+
+void fill_sample_data(Tree* tree_ptr){
+    FamilyMember* kuba = new FamilyMember;
+    fill_member(kuba,"kuba");
+    tree_ptr->me = kuba;
+    FamilyMember* mama = new FamilyMember;
+    fill_member(mama,"mama");
+    kuba->mother = mama;
+    FamilyMember* tata = new FamilyMember;
+    fill_member(tata,"tata");
+    kuba->father = tata;
+    FamilyMember* dziadek = new FamilyMember;
+    fill_member(dziadek,"franek");
+    mama->father = dziadek;
+
 }
